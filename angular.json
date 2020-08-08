@@ -1,8 +1,64 @@
 {
   "version": 1,
-  "projects": {},
+  "projects": {
+    "express": {
+      "root": "apps/express",
+      "sourceRoot": "apps/express/src",
+      "projectType": "application",
+      "prefix": "express",
+      "schematics": {},
+      "architect": {
+        "build": {
+          "builder": "@nrwl/node:build",
+          "options": {
+            "outputPath": "dist/apps/express",
+            "main": "apps/express/src/main.ts",
+            "tsConfig": "apps/express/tsconfig.app.json",
+            "assets": ["apps/express/src/assets"]
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false,
+              "fileReplacements": [
+                {
+                  "replace": "apps/express/src/environments/environment.ts",
+                  "with": "apps/express/src/environments/environment.prod.ts"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "express:build"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "apps/express/tsconfig.app.json",
+              "apps/express/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!apps/express/**/*"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "apps/express/jest.config.js",
+            "tsConfig": "apps/express/tsconfig.spec.json",
+            "passWithNoTests": true
+          }
+        }
+      }
+    }
+  },
   "cli": {
-    "defaultCollection": "@nrwl/workspace"
+    "defaultCollection": "@nrwl/express"
   },
   "schematics": {
     "@nrwl/workspace": {
@@ -39,5 +95,6 @@
         "linter": "tslint"
       }
     }
-  }
+  },
+  "defaultProject": "express"
 }
